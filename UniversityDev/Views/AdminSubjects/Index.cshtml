@@ -1,0 +1,47 @@
+@model List<University.Models.Subject>
+@{
+    ViewData["Title"] = "Przedmioty";
+}
+
+<div class="card-soft p-4">
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+        <div>
+            <h3 class="fw-semibold mb-1"><i class="bi bi-journal-bookmark me-2"></i>Przedmioty</h3>
+            <div class="text-muted2">Dodawanie przedmiotów i przypisanie prowadzącego.</div>
+        </div>
+
+        <a class="btn btn-light px-3" asp-action="Create">
+            <i class="bi bi-plus-lg me-1"></i> Dodaj przedmiot
+        </a>
+    </div>
+
+    <hr class="border-light border-opacity-10 my-4"/>
+
+    <div class="table-responsive">
+        <table class="table table-borderless align-middle mb-0 text-light">
+            <thead>
+            <tr class="text-muted2 small">
+                <th>Nazwa</th>
+                <th>Wydział</th>
+                <th>Prowadzący</th>
+                <th class="text-end">Akcje</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var s in Model)
+            {
+                <tr class="glass">
+                    <td class="fw-semibold">@s.Name</td>
+                    <td class="text-muted2">@s.Faculty</td>
+                    <td class="text-muted2">@(s.Lecturer?.User?.Email ?? "—")</td>
+                    <td class="text-end">
+                        <a class="btn btn-outline-light btn-sm" asp-action="Edit" asp-route-id="@s.Id">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

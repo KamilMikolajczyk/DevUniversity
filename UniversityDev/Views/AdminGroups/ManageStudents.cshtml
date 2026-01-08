@@ -1,0 +1,111 @@
+@model List<University.Models.Student>
+@using University.Models
+@{
+    ViewData["Title"] = "Studenci w grupie";
+    var group = (StudentGroup)ViewBag.Group;
+    var groups = (List<StudentGroup>)ViewBag.Groups;
+}
+
+<div class="card-soft p-4">
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+        <div>
+            <h3 class="fw-semibold mb-1"><i class="bi bi-person-lines-fill me-2"></i>@group.Code — studenci</h3>
+            <div class="text-muted2">Bulk: checkboxy. Szybka zmiana: dropdown + ✓ (działa zawsze).</div>
+        </div>
+        <a class="btn btn-outline-light" asp-action="Index">
+            <i class="bi bi-arrow-left me-1"></i> Wróć do grup
+        </a>
+    </div>
+
+    <hr class="border-light border-opacity-10 my-4"/>
+
+    <form asp-action="BulkAssign" method="post" class="glass rounded-4 p-3 mb-3" id="bulkForm">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="returnGroupId" value="@group.Id" />
+
+        <div class="d-flex flex-wrap gap-2 align-items-end">
+            <div>
+                <div class="text-muted2 small mb-1">Przypisz zaznaczonych do:</div>
+                <select name="groupId" class="form-select" style="min-width:220px;">
+                    @foreach (var g in groups)
+                    {
+                        <option value="@g.Id" selected="@(g.Id == group.Id)">@g.Code</option>
+                    }
+                </select>
+            </div>
+
+            <button class="btn btn-light px-3" type="submit">
+                <i class="bi bi-people-fill me-1"></i> Przypisz zaznaczonych
+            </button>
+
+            <button class="btn btn-outline-light px-3" type="button" id="checkAllBtn">Zaznacz wszystko</button>
+            <button class="btn btn-outline-light px-3" type="button" id="uncheckAllBtn">Odznacz wszystko</button>
+        </div>
+    </form>
+
+    <div class="table-responsive">
+        <table class="table table-borderless align-middle mb-0 text-light">
+            <thead>
+            <tr class="text-muted2 small">
+                <th style="width:48px;"></th>
+                <th>Indeks</th>
+                <th>Email</th>
+                <th>Wydział</th>
+                <th>Obecna grupa</th>
+                <th class="text-end" style="width:360px;">Szybka zmiana</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var s in Model)
+            {
+                <tr class="glass">
+                    <td>
+                        <input class="form-check-input student-check"
+                               type="checkbox"
+                               name="studentIds"
+                               value="@s.Id"
+                               form="bulkForm" />
+                    </td>
+
+                    <td class="fw-semibold">@s.IndexNumber</td>
+                    <td class="text-muted2">@s.User?.Email</td>
+                    <td class="text-muted2">@s.Faculty</td>
+
+                    <td class="text-muted2">
+                        @(groups.FirstOrDefault(x => x.Id == s.StudentGroupId)?.Code ?? "—")
+                    </td>
+
+                    <td class="text-end">
+                        <form asp-action="SetStudentGroup" method="post" class="d-inline-flex gap-2 align-items-center">
+                            @Html.AntiForgeryToken()
+
+                            <input type="hidden" name="studentId" value="@s.Id" />
+                            <input type="hidden" name="returnGroupId" value="@group.Id" />
+
+                            <select name="groupId" class="form-select form-select-sm" style="width:240px;">
+                                <option value="">— brak —</option>
+                                @foreach (var g in groups)
+                                {
+                                    <option value="@g.Id" selected="@(g.Id == s.StudentGroupId)">@g.Code</option>
+                                }
+                            </select>
+
+                            <button class="btn btn-outline-light btn-sm" type="submit" title="Zapisz">
+                                <i class="bi bi-check2"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    const checks = () => Array.from(document.querySelectorAll('.student-check'));
+    document.getElementById('checkAllBtn').addEventListener('click', () => checks().forEach(c => c.checked = true));
+    document.getElementById('uncheckAllBtn').addEventListener('click', () => checks().forEach(c => c.checked = false));
+</script>
+}

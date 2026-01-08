@@ -1,0 +1,46 @@
+@model List<University.Models.StudentGroup>
+@{
+    ViewData["Title"] = "Grupy";
+}
+
+<div class="card-soft p-4">
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+        <div>
+            <h3 class="fw-semibold mb-1"><i class="bi bi-people me-2"></i>Grupy</h3>
+            <div class="text-muted2">Tworzenie grup i zarządzanie studentami.</div>
+        </div>
+        <a class="btn btn-light px-3" asp-action="Create">
+            <i class="bi bi-plus-lg me-1"></i> Dodaj grupę
+        </a>
+    </div>
+
+    <hr class="border-light border-opacity-10 my-4"/>
+
+    <div class="table-responsive">
+        <table class="table table-borderless align-middle mb-0 text-light">
+            <thead>
+            <tr class="text-muted2 small">
+                <th>Kod</th>
+                <th>Wydział</th>
+                <th>Studenci</th>
+                <th class="text-end">Akcje</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var g in Model)
+            {
+                <tr class="glass">
+                    <td class="fw-semibold">@g.Code</td>
+                    <td class="text-muted2">@g.Faculty</td>
+                    <td class="text-muted2">@g.Students.Count</td>
+                    <td class="text-end">
+                        <a class="btn btn-outline-light btn-sm" asp-action="ManageStudents" asp-route-id="@g.Id">
+                            <i class="bi bi-person-lines-fill me-1"></i> Studenci
+                        </a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

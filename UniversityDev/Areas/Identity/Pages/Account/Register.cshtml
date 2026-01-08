@@ -1,0 +1,86 @@
+@page
+@model University.Areas.Identity.Pages.Account.RegisterModel
+@{ ViewData["Title"] = "Rejestracja"; }
+
+<div class="card-soft p-4 p-lg-5">
+    <h2 class="fw-bold mb-1">Utwórz konto</h2>
+    <div class="text-muted2 mb-4">Wybierz typ konta i uzupełnij dane profilu.</div>
+
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label text-muted2">Email</label>
+                <input asp-for="Input.Email" class="form-control" autocomplete="username" />
+                <span asp-validation-for="Input.Email" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label text-muted2">Typ konta</label>
+                <select asp-for="Input.AccountType" class="form-select" id="accountType">
+                    <option value="Student">Student</option>
+                    <option value="Lecturer">Prowadzący</option>
+                </select>
+                <span asp-validation-for="Input.AccountType" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label text-muted2">Hasło</label>
+                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" />
+                <span asp-validation-for="Input.Password" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label text-muted2">Powtórz hasło</label>
+                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" />
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label text-muted2">Wydział</label>
+                <select asp-for="Input.Faculty" class="form-select">
+                    @foreach (var f in Enum.GetValues(typeof(University.Models.Faculty)))
+                    {
+                        <option value="@f">@f</option>
+                    }
+                </select>
+                <span asp-validation-for="Input.Faculty" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6" id="studentBox">
+                <label class="form-label text-muted2">Numer indeksu</label>
+                <input asp-for="Input.IndexNumber" class="form-control" />
+                <span asp-validation-for="Input.IndexNumber" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6 d-none" id="lecturerBox">
+                <label class="form-label text-muted2">Tytuł (np. Dr)</label>
+                <input asp-for="Input.LecturerTitle" class="form-control" />
+                <span asp-validation-for="Input.LecturerTitle" class="text-danger small"></span>
+            </div>
+        </div>
+
+        <div class="mt-4 d-flex gap-2">
+            <button type="submit" class="btn btn-light px-4">Utwórz konto</button>
+            <a class="btn btn-outline-light px-4" asp-page="./Login">Mam już konto</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const accountType = document.getElementById('accountType');
+        const studentBox = document.getElementById('studentBox');
+        const lecturerBox = document.getElementById('lecturerBox');
+
+        function sync() {
+            const v = accountType.value;
+            if (v === 'Student') { studentBox.classList.remove('d-none'); lecturerBox.classList.add('d-none'); }
+            else { studentBox.classList.add('d-none'); lecturerBox.classList.remove('d-none'); }
+        }
+        accountType.addEventListener('change', sync);
+        sync();
+    </script>
+}

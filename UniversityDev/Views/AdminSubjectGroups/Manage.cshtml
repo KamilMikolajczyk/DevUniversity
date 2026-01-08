@@ -1,0 +1,37 @@
+@model University.Models.ViewModels.SubjectGroupsVm
+@{
+    ViewData["Title"] = "Przypisz grupy";
+}
+
+<div class="card-soft p-4">
+    <h3 class="fw-semibold mb-1">@Model.SubjectName</h3>
+    <div class="text-muted2 mb-4">Zaznacz grupy, które mają mieć ten przedmiot.</div>
+
+    <form method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="SubjectId" />
+        <input type="hidden" asp-for="SubjectName" />
+
+        <div class="row g-2">
+            @for (int i = 0; i < Model.Groups.Count; i++)
+            {
+                <div class="col-md-6">
+                    <div class="glass rounded-4 p-3 d-flex justify-content-between align-items-center">
+                        <div class="fw-semibold">@Model.Groups[i].Code</div>
+
+                        <input type="hidden" asp-for="Groups[i].GroupId" />
+                        <input type="hidden" asp-for="Groups[i].Code" />
+                        <div class="form-check m-0">
+                            <input class="form-check-input" asp-for="Groups[i].Assigned" />
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="mt-4 d-flex gap-2">
+            <button class="btn btn-light px-4" type="submit">Zapisz</button>
+            <a class="btn btn-outline-light px-4" asp-action="PickSubject">Wróć</a>
+        </div>
+    </form>
+</div>

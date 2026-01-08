@@ -1,0 +1,83 @@
+@model List<University.Models.CalendarEvent>
+@{ ViewData["Title"] = "Kalendarz"; }
+<div class="card-soft p-4">
+    <div class="d-flex align-items-start align-items-md-center justify-content-between flex-wrap gap-3">
+        <div>
+            <h3 class="fw-semibold mb-1"><i class="bi bi-calendar3 me-2"></i>Kalendarz</h3>
+            <div class="text-muted2">Wydarzenia widoczne dla Ciebie (role + wydział + zapisy).</div>
+        </div>
+        <button class="btn btn-light px-3" data-bs-toggle="modal" data-bs-target="#createPrivateModal">
+            <i class="bi bi-plus-lg me-1"></i> Prywatne wydarzenie
+        </button>
+    </div>
+
+    <hr class="border-light border-opacity-10 my-4"/>
+
+    <div class="table-responsive">
+        <table class="table table-borderless align-middle mb-0 text-light">
+            <thead>
+                <tr class="text-muted2 small">
+                    <th>Start (UTC)</th><th>Koniec (UTC)</th><th>Tytuł</th><th>Miejsce</th><th>Widoczność</th><th>Przedmiot</th>
+                </tr>
+            </thead>
+            <tbody>
+            @if (!Model.Any())
+            {
+                <tr><td colspan="6" class="text-muted2">Brak wydarzeń.</td></tr>
+            }
+            else
+            {
+                @foreach (var e in Model)
+                {
+                    <tr class="glass">
+                        <td class="small">@e.StartUtc.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td class="small">@e.EndUtc.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td class="fw-semibold">@e.Title</td>
+                        <td class="text-muted2">@e.Location</td>
+                        <td><span class="badge rounded-pill bg-light text-dark">@e.Visibility</span></td>
+                        <td class="text-muted2 small">@e.Subject?.Name</td>
+                    </tr>
+                }
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="createPrivateModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content glass text-light">
+            <div class="modal-header border-light border-opacity-10">
+                <h5 class="modal-title fw-semibold"><i class="bi bi-plus-circle me-2"></i>Prywatne wydarzenie</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-action="CreatePrivate" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label text-muted2">Tytuł</label>
+                        <input name="title" class="form-control" placeholder="np. Nauka do kolosa" required />
+                    </div>
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <label class="form-label text-muted2">Start (UTC)</label>
+                            <input name="startUtc" type="datetime-local" class="form-control" required />
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label text-muted2">Koniec (UTC)</label>
+                            <input name="endUtc" type="datetime-local" class="form-control" required />
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <label class="form-label text-muted2">Miejsce (opcjonalnie)</label>
+                        <input name="location" class="form-control" placeholder="np. Biblioteka / Teams" />
+                    </div>
+                </div>
+                <div class="modal-footer border-light border-opacity-10">
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Anuluj</button>
+                    <button type="submit" class="btn btn-light"><i class="bi bi-check2 me-1"></i> Zapisz</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

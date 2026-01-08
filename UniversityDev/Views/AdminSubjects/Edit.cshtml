@@ -1,0 +1,47 @@
+@model University.Models.Subject
+@using University.Models
+@{
+    ViewData["Title"] = "Edytuj przedmiot";
+    var lecturers = ViewBag.Lecturers as List<University.Models.Lecturer>;
+}
+
+<div class="card-soft p-4">
+    <h3 class="fw-semibold mb-3">Edytuj przedmiot</h3>
+
+    <form method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+
+        <div class="mb-3">
+            <label class="form-label text-muted2">Nazwa</label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger small"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label text-muted2">Wydział</label>
+            <select asp-for="Faculty" class="form-select">
+                @foreach (var f in Enum.GetValues(typeof(Faculty)))
+                {
+                    <option value="@f">@f</option>
+                }
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label text-muted2">Prowadzący</label>
+            <select asp-for="LecturerId" class="form-select">
+                <option value="">— brak —</option>
+                @foreach (var l in lecturers!)
+                {
+                    <option value="@l.Id">@l.User.Email (@l.Title)</option>
+                }
+            </select>
+        </div>
+
+        <button class="btn btn-light px-4" type="submit">Zapisz</button>
+        <a class="btn btn-outline-light px-4" asp-action="Index">Anuluj</a>
+    </form>
+</div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

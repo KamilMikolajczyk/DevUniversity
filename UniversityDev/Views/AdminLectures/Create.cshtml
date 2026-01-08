@@ -1,0 +1,67 @@
+@model University.Models.CalendarEvent
+@using University.Models
+@{
+    ViewData["Title"] = "Dodaj zajęcia";
+    var subjects = ViewBag.Subjects as List<University.Models.Subject>;
+}
+
+<div class="card-soft p-4">
+    <h3 class="fw-semibold mb-3">Dodaj zajęcia</h3>
+
+    <form method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="mb-3">
+            <label class="form-label text-muted2">Przedmiot</label>
+            <select asp-for="SubjectId" class="form-select">
+                <option value="">— wybierz —</option>
+                @foreach (var s in subjects!)
+                {
+                    <option value="@s.Id">@s.Name (@s.Faculty)</option>
+                }
+            </select>
+            <span asp-validation-for="SubjectId" class="text-danger small"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label text-muted2">Tytuł</label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger small"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label text-muted2">Lokalizacja</label>
+            <input asp-for="Location" class="form-control" />
+        </div>
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label text-muted2">Start (UTC)</label>
+                <input asp-for="StartUtc" class="form-control" type="datetime-local" />
+                <span asp-validation-for="StartUtc" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label text-muted2">Koniec (UTC)</label>
+                <input asp-for="EndUtc" class="form-control" type="datetime-local" />
+                <span asp-validation-for="EndUtc" class="text-danger small"></span>
+            </div>
+        </div>
+
+        <div class="mb-3 mt-3">
+            <label class="form-label text-muted2">Widoczność</label>
+            <select asp-for="Visibility" class="form-select">
+                @foreach (var v in Enum.GetValues(typeof(CalendarVisibility)))
+                {
+                    <option value="@v">@v</option>
+                }
+            </select>
+        </div>
+
+        <input type="hidden" asp-for="IsLecture" value="true" />
+
+        <button class="btn btn-light px-4" type="submit">Zapisz</button>
+        <a class="btn btn-outline-light px-4" asp-action="Index">Anuluj</a>
+    </form>
+</div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

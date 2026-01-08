@@ -1,0 +1,49 @@
+@model University.Models.Student?
+@{ ViewData["Title"] = "Student"; }
+<div class="card-soft p-4">
+    <h3 class="fw-semibold mb-1"><i class="bi bi-mortarboard me-2"></i>Panel Studenta</h3>
+    <div class="text-muted2 mb-4">Dostęp tylko dla roli Student.</div>
+
+    @if (Model == null)
+    {
+        <div class="alert alert-warning border-0 card-soft">Brak profilu studenta pod tym kontem.</div>
+    }
+    else
+    {
+        <div class="row g-3">
+            <div class="col-lg-4">
+                <div class="glass rounded-4 p-3">
+                    <div class="fw-semibold mb-2">Dane</div>
+                    <div class="text-muted2 small">Indeks</div>
+                    <div class="mb-2">@Model.IndexNumber</div>
+                    <div class="text-muted2 small">Wydział</div>
+                    <div>@Model.Faculty</div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="glass rounded-4 p-3">
+                    <div class="fw-semibold mb-2">Zapisane przedmioty</div>
+                    @if (!Model.StudentSubjects.Any())
+                    {
+                        <div class="text-muted2">Brak zapisów.</div>
+                    }
+                    else
+                    {
+                        <div class="list-group list-group-flush">
+                            @foreach (var ss in Model.StudentSubjects.OrderBy(x => x.Subject.Name))
+                            {
+                                <div class="list-group-item bg-transparent text-light border-light border-opacity-10 d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <div class="fw-semibold">@ss.Subject.Name</div>
+                                        <div class="text-muted2 small">@ss.Subject.Faculty</div>
+                                    </div>
+                                    <span class="badge rounded-pill bg-light text-dark">Subject</span>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>

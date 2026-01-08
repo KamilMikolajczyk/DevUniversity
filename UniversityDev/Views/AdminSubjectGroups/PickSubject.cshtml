@@ -1,0 +1,19 @@
+@model List<University.Models.Subject>
+@{
+    ViewData["Title"] = "Wybierz przedmiot";
+}
+
+<div class="card-soft p-4">
+    <h3 class="fw-semibold mb-3"><i class="bi bi-diagram-3 me-2"></i>Przypisz grupy do przedmiotu</h3>
+
+    <div class="list-group list-group-flush">
+        @foreach (var s in Model)
+        {
+            <a class="list-group-item bg-transparent text-light border-light border-opacity-10"
+               asp-action="Manage" asp-route-subjectId="@s.Id">
+                <div class="fw-semibold">@s.Name</div>
+                <div class="text-muted2 small">@s.Faculty</div>
+            </a>
+        }
+    </div>
+</div>

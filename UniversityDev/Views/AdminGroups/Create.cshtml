@@ -1,0 +1,34 @@
+@model University.Models.StudentGroup
+@using University.Models
+@{
+    ViewData["Title"] = "Dodaj grupę";
+}
+
+<div class="card-soft p-4">
+    <h3 class="fw-semibold mb-3">Dodaj grupę</h3>
+
+    <form method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="mb-3">
+            <label class="form-label text-muted2">Kod (np. INF1-A)</label>
+            <input asp-for="Code" class="form-control" />
+            <span asp-validation-for="Code" class="text-danger small"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label text-muted2">Wydział</label>
+            <select asp-for="Faculty" class="form-select">
+                @foreach (var f in Enum.GetValues(typeof(Faculty)))
+                {
+                    <option value="@f">@f</option>
+                }
+            </select>
+        </div>
+
+        <button class="btn btn-light px-4" type="submit">Zapisz</button>
+        <a class="btn btn-outline-light px-4" asp-action="Index">Anuluj</a>
+    </form>
+</div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

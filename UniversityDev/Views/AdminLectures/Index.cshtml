@@ -1,0 +1,54 @@
+@model List<University.Models.CalendarEvent>
+@{
+    ViewData["Title"] = "Zajęcia";
+}
+
+<div class="card-soft p-4">
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+        <div>
+            <h3 class="fw-semibold mb-1"><i class="bi bi-easel me-2"></i>Zajęcia</h3>
+            <div class="text-muted2">Zajęcia (wydarzenia) widoczne w kalendarzu.</div>
+        </div>
+        <a class="btn btn-light px-3" asp-action="Create">
+            <i class="bi bi-plus-lg me-1"></i> Dodaj zajęcia
+        </a>
+    </div>
+
+    <hr class="border-light border-opacity-10 my-4"/>
+
+    <div class="table-responsive">
+        <table class="table table-borderless align-middle mb-0 text-light">
+            <thead>
+            <tr class="text-muted2 small">
+                <th>Tytuł</th>
+                <th>Przedmiot</th>
+                <th>Początek (UTC)</th>
+                <th>Koniec (UTC)</th>
+                <th>Miejsce</th>
+                <th class="text-end">Akcje</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var e in Model)
+            {
+                <tr class="glass">
+                    <td class="fw-semibold">@e.Title</td>
+                    <td class="text-muted2">@(e.Subject?.Name ?? "—")</td>
+                    <td class="text-muted2">@e.StartUtc.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td class="text-muted2">@e.EndUtc.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td class="text-muted2">@(e.Location ?? "—")</td>
+                    <td class="text-end">
+                        <form asp-action="Delete" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@e.Id" />
+                            <button class="btn btn-outline-light btn-sm" type="submit" onclick="return confirm('Usunąć zajęcia?')">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
