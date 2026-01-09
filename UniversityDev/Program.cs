@@ -12,7 +12,6 @@ builder.Services.AddRazorPages();
 builder.Services.AddDbContext<UnivercityDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")!));
 
-// Identity + Roles
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
@@ -23,7 +22,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 .AddEntityFrameworkStores<UnivercityDbContext>()
 .AddDefaultTokenProviders();
 
-// Cookies: auto-logout after 10 minutes of inactivity
+
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Identity/Account/Login";
@@ -34,7 +33,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 
     options.Cookie.HttpOnly = true;
     options.Cookie.SameSite = SameSiteMode.Lax;
-    // DEV-friendly. In production you can set Always.
+ 
     options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
 });
 
@@ -59,7 +58,6 @@ app.UseRouting();
 
 app.UseAuthentication();
 
-// Prevent cached authenticated pages (fixes "Back button shows logged-in page" illusion)
 app.Use(async (context, next) =>
 {
     await next();
