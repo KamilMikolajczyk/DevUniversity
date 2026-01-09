@@ -12,7 +12,6 @@ public static class SeedData
         public const string Student = "Student";
         public const string Lecturer = "Lecturer";
     }
-
     public static async Task SeedAsync(IServiceProvider services)
     {
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
@@ -24,8 +23,6 @@ public static class SeedData
             if (!await roleManager.RoleExistsAsync(role))
                 await roleManager.CreateAsync(new IdentityRole(role));
         }
-
-        // Seed admin (not shown in UI)
         var adminEmail = "admin@uni.local";
         var admin = await userManager.FindByEmailAsync(adminEmail);
         if (admin == null)
@@ -35,8 +32,7 @@ public static class SeedData
             await userManager.AddToRoleAsync(admin, Roles.Admin);
         }
 
-        // Seed lecturer (not shown in UI)
-        var lecturerEmail = "lecturer@uni.local";
+        var lecturerEmail ="lecturer@uni.local";
         var lecturerUser = await userManager.FindByEmailAsync(lecturerEmail);
         if (lecturerUser == null)
         {
@@ -56,7 +52,6 @@ public static class SeedData
             });
             await db.SaveChangesAsync();
         }
-
         if (!await db.Subjects.AnyAsync())
         {
             var subject = new Subject { Name = "Databases", Faculty = Faculty.ComputerScience };
